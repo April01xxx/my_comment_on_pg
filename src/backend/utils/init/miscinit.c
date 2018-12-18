@@ -979,6 +979,18 @@ CreateLockFile(const char *filename, bool amPostmaster,
 		}
 
 		buffer[len] = '\0';
+		/* 
+		 * 获取文件中保存的pid,以我本机上的postmaster.pid文件为例,内容如下:
+		 * 27546
+		 * /home/postgres/pgdata
+		 * 1545038657
+		 * 5432
+
+		 * localhost
+		 * 利用wc -c postmaster.pd统计得到长度为55个字节,gdb调试输出len的大小
+		 * 也是55.注意到第一行的内容实际上就是pid,故这里atoi就是取得了之前创建
+		 * 这个文件的进程ID.
+		 */
 		encoded_pid = atoi(buffer);
 
 		/* if pid < 0, the pid is for postgres, not postmaster */
